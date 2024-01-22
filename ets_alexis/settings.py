@@ -38,12 +38,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # cors setting app for the frontend
+    "corsheaders",
     # Customs
     "rest_framework",
     "fabrique",
+    'quincaillerie', 
+    'immobilier'
 ]
 
 MIDDLEWARE = [
+    # cors middleware
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -52,6 +58,11 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+# Allowed hosts when intercepting cors requests
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:4200",  # replace with your Angular app's address
+)
 
 ROOT_URLCONF = "ets_alexis.urls"
 
