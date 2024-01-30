@@ -1,34 +1,46 @@
-from django.db import models
+import uuid
+
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils import lorem_ipsum
 
 
 class Article(models.Model):
-    title = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
-    stock = models.IntegerField()
-    price = models.IntegerField()
-    creation_date = models.DateField(auto_now_add=True)
-    last_modified = models.DateField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title = models.CharField(max_length=50, verbose_name="Titre/Intitule/Nom", unique=True,)
+    description = models.TextField(blank=True,  verbose_name="Description",default=lorem_ipsum.paragraph)
+    creation_date = models.DateField(auto_now_add=True, verbose_name="Date de Creation")
+    last_modified = models.DateField(auto_now=True, verbose_name="Derniere Modification")
 
-    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name="Autheur")
 
     def __str__(self) -> str:
         return self.title
 
 
 class PhotoArticle(models.Model):
-    description = models.TextField(blank=True, max_length=250)
-    picture = models.ImageField(upload_to="photos/Articles", blank=True)
-    article = models.ForeignKey(
-        Article, related_name="photos", on_delete=models.CASCADE
-    )
-    creation_date = models.DateField(auto_now_add=True)
-    last_modified = models.DateField(auto_now=True)
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    description = models.TextField(blank=True, max_length=250,  verbose_name="Decription", default=lorem_ipsum.paragraph)
+    picture = models.ImageField(upload_to="photos/Articles/", blank=True, verbose_name="Image/Photo")
+    creation_date = models.DateField(auto_now_add=True, verbose_name="Date de creation")
+    last_modified = models.DateField(auto_now=True, verbose_name="Derniere modification")
 
-    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+    article = models.ForeignKey(
+        Article, related_name="photos", on_delete=models.CASCADE,
+        verbose_name="Choix de l'article"
+    )
+    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name="Auteur")
+    
+    def get_article_name(self):
+        return self.article.title 
+    
+    def save(self, *args, **kwargs):
+        self.picture.name = f"{self.get_article_name()}/{self.picture.name}"
+        print(f'****** {self.picture.name}')
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return self.pk
+        return self.article.title
 
 
 class VariationManager(models.Manager):
@@ -54,6 +66,7 @@ class VariationManager(models.Manager):
 
 
 class Variation(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     article = models.ForeignKey(
         Article, on_delete=models.CASCADE, related_name="variations"
     )
@@ -65,15 +78,19 @@ class Variation(models.Model):
             ("diametre", "diametre"),
             ("forme", "forme"),
         ),
+        verbose_name="Type de variation"
     )
-    variation_value = models.CharField(max_length=50)
-    is_active = models.BooleanField(default=True)
+    description = models.TextField(blank=True, max_length=250,  verbose_name="Description", default=lorem_ipsum.paragraph)
+    variation_value = models.CharField(max_length=50,  verbose_name="Valeur de la variation")
+    stock = models.IntegerField(verbose_name="Quantite en Stock", default=0)
+    price = models.IntegerField(verbose_name="Prix Unitaire(en FCFA)", default=0)
+    is_active = models.BooleanField(default=True,  verbose_name="Est actif")
     creation_date = models.DateField(auto_now_add=True)
-    last_modified = models.DateField(auto_now=True)
+    last_modified = models.DateField(auto_now=True,  verbose_name="Derniere modification")
 
     objects = VariationManager()
 
-    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+    creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True,  verbose_name="Auteur")
 
     def __str__(self):
         return self.variation_value

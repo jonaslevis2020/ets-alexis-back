@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,11 +41,15 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # cors setting app for the frontend
     "corsheaders",
-    # Customs
     "rest_framework",
+    # for token authentication
+    "rest_framework.authtoken",
+    # 'dj_rest_auth',
+    # Customs
+    "accounts",
     "fabrique",
-    'quincaillerie', 
-    'immobilier'
+    "immobilier",
+    "quincaillerie",
 ]
 
 MIDDLEWARE = [
@@ -114,6 +119,24 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# custom user model
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+# backend config for token authentication
+REST_FRAMEWORK = {
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',  
+    ],
+    
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
+}
+
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
@@ -136,3 +159,7 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# media settings
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
