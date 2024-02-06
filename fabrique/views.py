@@ -5,6 +5,8 @@ from rest_framework.views import APIView
 from .articles.articles_views import (ArticleViewSet, PhotoArticleViewSet,
                                       VariationViewSet)
 
+from .infrastructures.ifrs_views import OutilViewSets, PhotoOutilViewSets
+
 init(autoreset=True)
 
 

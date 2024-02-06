@@ -70,9 +70,7 @@ class OutilAdmin(BaseAdmin):
 class PhotoOutilAdmin(BaseAdmin):
     def image_thumbnail(self, obj:PhotoOutil):
         return format_html(
-            '<img src="{}" style="max-width:100px; max-height:100px"/>'.format(
-                obj.picture.url
-            )
+            f'<img src="{obj.picture.url}" style="max-width:100px; max-height:100px"/>'
         )
 
     list_display = [field.name for field in PhotoOutil._meta.get_fields()] + [
