@@ -1,5 +1,10 @@
-from django.contrib.auth import (authenticate, get_user_model, login, logout,
-                                 update_session_auth_hash)
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login,
+    logout,
+    update_session_auth_hash,
+)
 from django.contrib.auth.forms import PasswordChangeForm
 from django.http import HttpRequest
 from rest_framework import status, viewsets
@@ -9,34 +14,38 @@ from rest_framework.response import Response
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.authtoken.models import Token
 
-from .serializers import AuthenticationSerializer, ChangePasswordSerializer, UserSerializer
+from .serializers import (
+    AuthenticationSerializer,
+    ChangePasswordSerializer,
+    UserSerializer,
+)
 
+from colorama import Fore, Style, init
+
+
+init(autoreset=True)
 
 class UserLogIn(ObtainAuthToken):
-
+    print(f"{Style.BRIGHT+Fore.RED}Before authentication")
     def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data,
-                                           context={'request': request})
+        serializer = self.serializer_class(
+            data=request.data, context={"request": request}
+        )
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        user = serializer.validated_data["user"]
         token = Token.objects.get(user=user)
-        return Response({
-            'token': token.key,
-            'id': user.pk,
-            'username': user.username
-        })
+        return Response({"token": token.key, "id": user.id, "username": user.username})
 
 
 class AuthViewSet(viewsets.ModelViewSet):
-    
     serializer_class = AuthenticationSerializer
     permission_classes = [AllowAny]
-    
 
     def login(self, request):
-        username = request.data.get('email')
+        username = request.data.get('username')
+        email = request.data.get('email')
         password = request.data.get('password')
-        user = authenticate(username=username, password=password)
+        user = authenticate(username=username, email=email, password=password)
         if user is not None:
             login(request, user)
             return Response({"detail": "Login Successful"}, status=status.HTTP_200_OK)

@@ -5,7 +5,7 @@ from .models import Article, PhotoArticle, Variation
 
 
 class BaseSerializer(serializers.ModelSerializer):
-    id = serializers.UUIDField(read_only=True)
+    # id = serializers.UUIDField(read_only=True)
     # set the creator field as read_only
     creator = serializers.PrimaryKeyRelatedField(
         read_only=True,
@@ -44,15 +44,7 @@ class PhotoArticleSerializer(BaseSerializer):
 
     class Meta:
         model = PhotoArticle
-        fields = [
-            "id",
-            "article",
-            "description",
-            "creator",
-            "picture",
-            "creation_date",
-            "last_modified",
-        ]
+        fields = "__all__"
 
     # def create(self, validated_data):
     #     """

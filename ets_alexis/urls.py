@@ -27,6 +27,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include(accounts_urls)),
     path("fabrique/", include(fabrique_urls)),
+    # browsable api authentication system urls
+    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     re_path(r"^$", RedirectView.as_view(url=reverse_lazy("api-root"), permanent=False)),
 ]
 if settings.DEBUG:

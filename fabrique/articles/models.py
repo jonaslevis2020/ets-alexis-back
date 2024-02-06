@@ -2,13 +2,14 @@ import uuid
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils import lorem_ipsum
+
+from ets_alexis.utils import DEFAULT_SIZE, get_uuid
 
 
 class Article(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=get_uuid, max_length=DEFAULT_SIZE,editable=False)
     title = models.CharField(max_length=50, verbose_name="Titre/Intitule/Nom", unique=True,)
-    description = models.TextField(blank=True,  verbose_name="Description",default=lorem_ipsum.paragraph)
+    description = models.TextField(blank=True,  verbose_name="Description",)
     creation_date = models.DateField(auto_now_add=True, verbose_name="Date de Creation")
     last_modified = models.DateField(auto_now=True, verbose_name="Derniere Modification")
 
@@ -19,8 +20,8 @@ class Article(models.Model):
 
 
 class PhotoArticle(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    description = models.TextField(blank=True, max_length=250,  verbose_name="Decription", default=lorem_ipsum.paragraph)
+    id = models.CharField(primary_key=True, default=get_uuid, max_length=DEFAULT_SIZE,editable=False)
+    description = models.TextField(blank=True, max_length=250,  verbose_name="Decription", )
     picture = models.ImageField(upload_to="photos/Articles/", blank=True, verbose_name="Image/Photo")
     creation_date = models.DateField(auto_now_add=True, verbose_name="Date de creation")
     last_modified = models.DateField(auto_now=True, verbose_name="Derniere modification")
@@ -66,7 +67,7 @@ class VariationManager(models.Manager):
 
 
 class Variation(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(primary_key=True, default=get_uuid, max_length=DEFAULT_SIZE,editable=False)
     article = models.ForeignKey(
         Article, on_delete=models.CASCADE, related_name="variations"
     )
@@ -80,7 +81,7 @@ class Variation(models.Model):
         ),
         verbose_name="Type de variation"
     )
-    description = models.TextField(blank=True, max_length=250,  verbose_name="Description", default=lorem_ipsum.paragraph)
+    description = models.TextField(blank=True, max_length=250,  verbose_name="Description", )
     variation_value = models.CharField(max_length=50,  verbose_name="Valeur de la variation")
     stock = models.IntegerField(verbose_name="Quantite en Stock", default=0)
     price = models.IntegerField(verbose_name="Prix Unitaire(en FCFA)", default=0)

@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
 from django.db import models
 
+from ets_alexis.utils import DEFAULT_SIZE, get_uuid
 
-class Outils(models.Model):
+
+class Outil(models.Model):
+    id = models.CharField(primary_key=True, default=get_uuid, max_length=DEFAULT_SIZE,editable=False)
     title = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     stock = models.IntegerField()
@@ -19,11 +21,12 @@ class Outils(models.Model):
         return self.title
 
 
-class PhotoOutils(models.Model):
+class PhotoOutil(models.Model):
+    id = models.CharField(primary_key=True, default=get_uuid, max_length=DEFAULT_SIZE,editable=False)
     description = models.TextField(blank=True, max_length=250)
-    picture = models.ImageField(upload_to="photos/outils", blank=True)
+    picture = models.ImageField(upload_to="photos/Outils", blank=True)
     representant = models.ForeignKey(
-        Outils, related_name="photos", on_delete=models.CASCADE
+        Outil, related_name="photos", on_delete=models.CASCADE
     )
     creation_date = models.DateField(auto_now_add=True)
     last_modified = models.DateField(auto_now=True)
@@ -33,6 +36,3 @@ class PhotoOutils(models.Model):
 
     def __str__(self) -> str:
         return self.pk
-    
-    
-

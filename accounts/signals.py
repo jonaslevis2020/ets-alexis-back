@@ -2,10 +2,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 
-from accounts.models import CustomUser
+from django.contrib.auth import get_user_model
 
 
-@receiver(post_save, sender=CustomUser)
+@receiver(post_save, sender=get_user_model())
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     """
     Creates an authentication token for a CustomUser instance after it is saved.

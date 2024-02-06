@@ -1,8 +1,10 @@
 from django.contrib import admin
 from django.urls import path
-from accounts.models import CustomUser
+from django.contrib.auth import get_user_model
 
 
+
+@admin.register(get_user_model())
 class CustomUserAdmin(admin.ModelAdmin):
     """Returns a list of URLs for the Django admin site, including additional URLs for managing user authentication.
 
@@ -40,4 +42,3 @@ class CustomUserAdmin(admin.ModelAdmin):
         return my_urls + urls
 
 
-admin.site.register(CustomUser, CustomUserAdmin)

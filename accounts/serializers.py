@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.password_validation import validate_password
 from django.forms import PasswordInput
 
-from accounts.models import CustomUser
+from django.contrib.auth import get_user_model
 
 
 class AuthenticationSerializer(serializers.ModelSerializer):
@@ -16,7 +16,7 @@ class AuthenticationSerializer(serializers.ModelSerializer):
         fields = ["id", "email", "password"]
 
     def create(self, validated_data):
-        user = CustomUser(**validated_data)
+        user = get_user_model()(**validated_data)
         user.set_password(validated_data["password"])
         user.save()
         return user
@@ -33,7 +33,7 @@ class UserSerializer(serializers.ModelSerializer):
         read_only_fields = ("password",)
 
     def create(self, validated_data):
-        user = CustomUser(**validated_data)
+        user = get_user_model()(**validated_data)
         user.set_password(validated_data["password"])
         user.save()
         return user
