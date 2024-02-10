@@ -7,6 +7,8 @@ from .articles.articles_views import (ArticleViewSet, PhotoArticleViewSet,
 
 from .infrastructures.ifrs_views import OutilViewSets, PhotoOutilViewSets
 
+from .ressources_humaines.clients.clients_views import ClientsViewSet, RepresentantClientViewSets, PhotoClientViewSets, PhotoRepresentantClientViewSets
+
 init(autoreset=True)
 
 

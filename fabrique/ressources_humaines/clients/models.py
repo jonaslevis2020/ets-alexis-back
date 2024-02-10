@@ -1,13 +1,15 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from ets_alexis.utils import DEFAULT_SIZE, get_uuid
 
 
 class Client(models.Model):
+    id = models.CharField(primary_key=True, max_length=DEFAULT_SIZE, default=get_uuid, editable=False)
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254, blank=True)
-    phone = models.TextField(max_length=20, blank=True)
-    address = models.CharField(max_length=50)
-    cni = models.CharField(max_length=50)
+    phone = models.TextField(max_length=20)
+    address = models.CharField(max_length=50, blank=True)
+    cni = models.CharField(max_length=50, blank=True)
 
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
 
@@ -16,11 +18,12 @@ class Client(models.Model):
 
 
 class RepresentantClient(models.Model):
+    id = models.CharField(primary_key=True, max_length=DEFAULT_SIZE, default=get_uuid, editable=False)
     name = models.CharField(max_length=50)
     email = models.EmailField(max_length=254, blank=True)
-    phone = models.TextField(max_length=20, blank=True)
-    address = models.CharField(max_length=50)
-    cni = models.CharField(max_length=50)
+    phone = models.TextField(max_length=20)
+    address = models.CharField(max_length=50, blank=True)
+    cni = models.CharField(max_length=50, blank=True)
     creation_date = models.DateField(auto_now_add=True)
     last_modified = models.DateField(auto_now=True)
 
@@ -35,8 +38,9 @@ class RepresentantClient(models.Model):
 
 
 class PhotoRepresentantClient(models.Model):
+    id = models.CharField(primary_key=True, max_length=DEFAULT_SIZE, default=get_uuid, editable=False)
     description = models.TextField(blank=True, max_length=250)
-    picture = models.ImageField(upload_to="photos/clients/representants", blank=True)
+    picture = models.ImageField(upload_to="photos/clients/representants")
     representant = models.ForeignKey(
         RepresentantClient, related_name="photos", on_delete=models.CASCADE
     )
@@ -45,20 +49,25 @@ class PhotoRepresentantClient(models.Model):
 
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        verbose_name_plural = "Photos Representants Clients"
+
     def __str__(self) -> str:
-        return self.pk
+        return self.representant.name
 
 
 class PhotoClient(models.Model):
+    id = models.CharField(primary_key=True, max_length=DEFAULT_SIZE, default=get_uuid, editable=False)
     description = models.TextField(blank=True, max_length=250)
-    picture = models.ImageField(upload_to="photos/clients", blank=True)
-    representant = models.ForeignKey(
-        Client, related_name="photos", on_delete=models.CASCADE
-    )
+    picture = models.ImageField(upload_to="photos/clients")
+    client = models.ForeignKey(Client, related_name="photos", on_delete=models.CASCADE)
     creation_date = models.DateField(auto_now_add=True)
     last_modified = models.DateField(auto_now=True)
 
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        verbose_name_plural = "Photos Clients"
+
     def __str__(self) -> str:
-        return self.pk
+        return self.client.name

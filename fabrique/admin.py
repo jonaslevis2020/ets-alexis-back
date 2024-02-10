@@ -79,10 +79,37 @@ class PhotoOutilAdmin(BaseAdmin):
 
 
 # Ressoureces Humaines
-admin.site.register(Client)
-admin.site.register(RepresentantClient)
-admin.site.register(PhotoClient)
-admin.site.register(PhotoRepresentantClient)
+@admin.register(Client)
+class ClientAdmin(BaseAdmin):
+    pass
+    
+@admin.register(PhotoClient)
+class ClientPhotoAdmin(BaseAdmin):
+    def image_thumbnail(self, obj:PhotoClient):
+        return format_html(
+            f'<img src="{obj.picture.url}" style="max-width:100px; max-height:100px"/>'
+        )
+
+    list_display = [field.name for field in PhotoClient._meta.get_fields()] + [
+        "image_thumbnail"
+    ]
+
+@admin.register(RepresentantClient)
+class RepresentantClientAdmin(BaseAdmin):
+    pass
+
+@admin.register(PhotoRepresentantClient)
+class PhotoRepresentantClientAdmin(BaseAdmin):
+    def image_thumbnail(self, obj:PhotoRepresentantClient):
+        return format_html(
+            f'<img src="{obj.picture.url}" style="max-width:100px; max-height:100px"/>'
+        )
+
+    list_display = [field.name for field in PhotoRepresentantClient._meta.get_fields()] + [
+        "image_thumbnail"
+    ]
+
+# Personnel
 admin.site.register(Employer)
 admin.site.register(PhotoEmployer)
 
