@@ -1,3 +1,4 @@
+from tabnanny import verbose
 from django.contrib.auth import get_user_model
 from django.db import models
 
@@ -27,13 +28,24 @@ class PhotoOutil(models.Model):
     )
     description = models.TextField(blank=True, max_length=250)
     picture = models.ImageField(upload_to="photos/Outils", blank=True)
-    representant = models.ForeignKey(
-        Outil, related_name="photos", on_delete=models.CASCADE, verbose_name="outil"
+    outil = models.ForeignKey(
+        Outil, related_name="photos", on_delete=models.CASCADE,
     )
     creation_date = models.DateField(auto_now_add=True)
     last_modified = models.DateField(auto_now=True)
 
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        verbose_name = "Photos Outils"
+
+    def get_outil_name(self):
+        return self.outil.title
+
+    def save(self, *args, **kwargs):
+        self.picture.name = f"{self.get_outil_name()}/{self.picture.name}"
+        print(f"****** {self.picture.name}")
+        super().save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.representant.title

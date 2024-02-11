@@ -32,6 +32,9 @@ class PhotoArticle(models.Model):
     )
     creator = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name="Auteur")
     
+    class Meta:
+        verbose_name = "Photos Articles"
+    
     def get_article_name(self):
         return self.article.title 
     

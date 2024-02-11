@@ -2,12 +2,11 @@ from colorama import Fore, Style, init
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .articles.articles_views import (ArticleViewSet, PhotoArticleViewSet,
-                                      VariationViewSet)
-
-from .infrastructures.ifrs_views import OutilViewSets, PhotoOutilViewSets
-
-from .ressources_humaines.clients.clients_views import ClientsViewSet, RepresentantClientViewSets, PhotoClientViewSets, PhotoRepresentantClientViewSets
+from .articles.articles_views import *
+from .infrastructures.ifrs_views import *
+from .ressources_humaines.clients.clients_views import *
+from .ressources_humaines.personel.personel_views import *
+from .ressources_humaines.prestataires.prestatires_views import *
 
 init(autoreset=True)
 
